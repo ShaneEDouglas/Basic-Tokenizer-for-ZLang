@@ -1,4 +1,3 @@
-
 vibe main():
 
 // Test for ZLang
@@ -7,8 +6,8 @@ vibe main():
 
    yap counter < 3:
       
-	say("Looping..)
-	say(counter)
+	say("Looping..")
+	say("counter")
 	counter = counter + 1
  	
    if counter == 3:
