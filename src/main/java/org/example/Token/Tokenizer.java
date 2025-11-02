@@ -138,7 +138,7 @@ public class Tokenizer {
             default:
                 // Unidentifed keyword
 
-                System.out.println("Unidentified keyword " + c + " at line " + line);
+
 
         }
 
@@ -214,7 +214,7 @@ public class Tokenizer {
             number.append(advance());
         }
         tokens.add(new Token(TokenType.NUMBER_LITERAL, number.toString()));
-        System.out.println("Number: " + number.toString());
+
     }
 
     private void skipWhiteSpaceAndComments() {
