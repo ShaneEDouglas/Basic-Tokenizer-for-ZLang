@@ -40,14 +40,24 @@ public class Tokenizer {
         keyWords.put("*", TokenType.STAR);
         keyWords.put("(" , TokenType.LEFT_PAREN);
         keyWords.put(")" , TokenType.RIGHT_PAREN);
+        keyWords.put("=", TokenType.EQUAL);
+        keyWords.put(">", TokenType.GREATER_THAN);
+        keyWords.put("<", TokenType.LESS_THAN);
+        keyWords.put(">=", TokenType.GREATER_THAN_EQUAL);
+        keyWords.put("<=", TokenType.LESS_THAN_EQUAL);
+        keyWords.put("==", TokenType.EQUAL_EQUAL);
+        keyWords.put("!=", TokenType.NOT_EQUAL);
+        keyWords.put("{", TokenType.BRACE_LEFT);
+        keyWords.put("}", TokenType.BRACE_RIGHT);
+        keyWords.put("End of File", TokenType.EOF);
     }
 
     public List<Token> tokenize() {
         while (!isAtEnd()) {
             scanTokens();
         }
-        // Addign an End of file token if there are no tokens
-        Token eofToken = new Token(TokenType.EOF, "");
+        // Addign an End of file token if there are no more tokens
+        Token eofToken = new Token(TokenType.EOF, "End of File");
         tokens.add(eofToken);
         return tokens;
     }
@@ -66,9 +76,30 @@ public class Tokenizer {
             current--;
             readIdentiferOrKeyword();
         } else if (Character.isDigit(c)) {
+            current--;
             readNumber();
         } else if (c == '"') {
+            current--;
             readString();
+        }
+
+        // Handling special operands
+        if (c == '=' && peek() == '=') {
+            tokens.add(new Token(TokenType.EQUAL_EQUAL,"=="));
+            advance();
+            return;
+        } else if (c == '!' && peek() == '=') {
+            tokens.add(new Token(TokenType.NOT_EQUAL,"!="));
+            advance();
+            return;
+        } else if (c == '>' && peek() == '=') {
+            tokens.add(new Token(TokenType.GREATER_THAN_EQUAL,"=="));
+            advance();
+            return;
+        } else if (c == '<' && peek() == '=') {
+            tokens.add(new Token(TokenType.LESS_THAN_EQUAL,"<"));
+            advance();
+            return;
         }
 
         // Directly append tokens for single operators
@@ -95,12 +126,23 @@ public class Tokenizer {
             case ',':
                 tokens.add(new Token(TokenType.COMMA, ","));
                 break;
+            case '>':
+                tokens.add(new Token(TokenType.GREATER_THAN, ">"));
+                break;
+            case '<':
+                tokens.add(new Token(TokenType.LESS_THAN, "<"));
+                break;
+            case '=':
+                tokens.add(new Token(TokenType.EQUAL, "="));
+                break;
             default:
                 // Unidentifed keyword
 
                 System.out.println("Unidentified keyword " + c + " at line " + line);
 
         }
+
+
 
 
 
@@ -161,6 +203,7 @@ public class Tokenizer {
 
     private void readNumber() {
         StringBuilder number = new StringBuilder();
+        char c = sourceCode.charAt(current);
 
 
         if (peek() == '\n') {
@@ -171,6 +214,7 @@ public class Tokenizer {
             number.append(advance());
         }
         tokens.add(new Token(TokenType.NUMBER_LITERAL, number.toString()));
+        System.out.println("Number: " + number.toString());
     }
 
     private void skipWhiteSpaceAndComments() {
