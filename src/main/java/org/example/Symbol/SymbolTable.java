@@ -21,7 +21,12 @@ public class SymbolTable {
     }
 
     public Symbol contains(String name) {
-       return symbolTable.get(name);
+        if (symbolTable.containsKey(name)) {
+            return symbolTable.get(name);
+        } else{
+            return null;
+        }
+
     }
 
     public void printInitial() {
